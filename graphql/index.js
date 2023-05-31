@@ -21,9 +21,13 @@ pool.query('SELECT * FROM users limit 1')
 });
 
 // initialize the server
-const server = new ApolloServer({ typeDefs, resolvers, context:{
-  pool
-} });
+const server = new ApolloServer({ typeDefs, resolvers, context:async(req)=>{
+  return {
+    pool,
+    req,
+    // query: req.body.query,
+  }
+}});
 
 server.listen().then(({ url }) => {
   console.log(`YOUR API IS RUNNING AT: ${url} :)`);
