@@ -8,20 +8,21 @@ const resolvers = {
       const res = await context.pool.query('SELECT * FROM users');
       return res.rows;
     },
-    user: (parent, args) => {
+    user: async (parent, args, context) => {
       const id = args.id;
-      const user = _.find(UserList, { id: Number(id) });
-      return user;
+      const res = await context.pool.query('SELECT * FROM users WHERE id = $1', [id]);
+      return res.rows[0];
     },
 
     // MOVIE RESOLVERS
-    movies: () => {
-      return MovieList;
+    movies: async (parent, args, context) => {
+      const res = await context.pool.query('SELECT * FROM movies');
+      return res.rows;
     },
-    movie: (parent, args) => {
+    movie:async (parent, args, context) => {
       const name = args.name;
-      const movie = _.find(MovieList, { name });
-      return movie;
+      const res = await context.pool.query('SELECT * FROM movies WHERE name = $1', [name]);
+      return res.rows[0];
     },
   },
   User: {
