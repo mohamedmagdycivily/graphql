@@ -39,3 +39,78 @@ VALUES
   ('Movie 10', 2022, true);
 
 -- Additional SQL statements can be added here if needed
+
+
+/*
+GraphQl testing 
+
+query Query {
+  users {
+    id
+    name
+    age
+    favoriteMovies {
+      name
+    }
+  }
+}
+
+query Query($userId: ID!) {
+  user(id: $userId) {
+    age
+  }
+}
+
+query Query {
+  movies {
+    name
+  }
+}
+
+query Query($name: String!){
+  movie(name: $name) {
+    name
+  }
+}
+
+//mutations
+mutation createUser($input: CreateUserInput!){
+  createUser(input: $input) {
+    name
+  }
+}
+
+mutation deleteUser($deleteUserId: ID!){
+  deleteUser(id: $deleteUserId) {
+    id
+  }
+}
+
+mutation updateUsername($updateUsernameInput2: UpdateUsernameInput!){
+  updateUsername(input: $updateUsernameInput2) {
+    id
+    name
+  }
+}
+
+variables for mutations: 
+{
+  // create
+  // "input": {
+  //   "name": "mohamed2",
+  //   "username": "magdy2",
+  //   "age": 26,
+  //   "nationality": "CANADA"
+  // },
+  
+  //delete
+  // "deleteUserId": 15,
+  
+  //update
+  // "updateUsernameInput2": {
+  //   "id": 14,
+  //   "newUsername": "mohamed1234"
+  // }
+}
+
+*/

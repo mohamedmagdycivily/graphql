@@ -26,40 +26,29 @@ const resolvers = {
     },
   },
   User: {
-    favoriteMovies: () => {
-      return _.filter(
-        MovieList,
-        (movie) =>
-          movie.yearOfPublication >= 2000 && movie.yearOfPublication <= 2010
-      );
+    favoriteMovies: async (parent, args, context) => {
+      const {favorite_movies} = parent;
+      const res = await context.pool.query(`SELECT * FROM movies WHERE id = ANY($1)`, [favorite_movies]);
+      return res.rows;
     },
   },
 
   Mutation: {
-    createUser: (parent, args) => {
+    createUser: async (parent, args, context) => {
       const user = args.input;
-      const lastId = UserList[UserList.length - 1].id;
-      user.id = lastId + 1;
-      UserList.push(user);
-      return user;
+      const res = await context.pool.query('INSERT INTO users (name, username, age, nationality) VALUES ($1, $2, $3, $4) RETURNING *', [user.name, user.username, user.age, user.nationality]);
+      return res.rows[0];
     },
 
-    updateUsername: (parent, args) => {
+    updateUsername: async (parent, args, context) => {
       const { id, newUsername } = args.input;
-      let userUpdated;
-      UserList.forEach((user) => {
-        if (user.id === Number(id)) {
-          user.username = newUsername;
-          userUpdated = user;
-        }
-      });
-
-      return userUpdated;
+      const res = await context.pool.query('UPDATE users SET name = $1 WHERE id = $2 RETURNING *', [newUsername, id]);
+      return res.rows[0];
     },
 
-    deleteUser: (parent, args) => {
+    deleteUser: async (parent, args, context) => {
       const id = args.id;
-      _.remove(UserList, (user) => user.id === Number(id));
+      await context.pool.query('DELETE FROM users WHERE id = $1', [id]);
       return null;
     },
   },
